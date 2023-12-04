@@ -22,30 +22,28 @@ class _CategoryScreenState extends State<CategoryScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: SafeArea(
-        child: Scaffold(
-            appBar: AppBar(
-              title: Text("Каталог"),
-            ),
-            body: BlocBuilder<CategoryCubit, CategoryState>(
-              builder: (context, state) {
-                if (state is CategoryLoading) {
-                  return const Center(
-                    child: CircularProgressIndicator.adaptive(),
-                  );
-                } else if (state is CategorySuccess) {
-                  return Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 10),
-                      child: buildCategoryWidget());
-                } else {
-                  return const Center(
-                    child: Text("Server error"),
-                  );
-                }
-              },
-            )),
-      ),
+    return SafeArea(
+      child: Scaffold(
+          appBar: AppBar(
+            title: Text("Каталог"),
+          ),
+          body: BlocBuilder<CategoryCubit, CategoryState>(
+            builder: (context, state) {
+              if (state is CategoryLoading) {
+                return const Center(
+                  child: CircularProgressIndicator.adaptive(),
+                );
+              } else if (state is CategorySuccess) {
+                return Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 10),
+                    child: buildCategoryWidget());
+              } else {
+                return const Center(
+                  child: Text("Server error"),
+                );
+              }
+            },
+          )),
     );
   }
 
@@ -74,7 +72,8 @@ class CategoryItemWidget extends StatelessWidget {
     return GestureDetector(
       onTap: () {
         context.read<ProductCubit>().loadProductsList(category.categoryId);
-        Navigator.pushNamed(context, RouteNames.product);
+
+        Navigator.pushNamed(context, RouteNames.product, arguments: {'category': category.title});
       },
       child: Container(
         clipBehavior: Clip.hardEdge,

@@ -17,38 +17,40 @@ class ProductListScreen extends StatefulWidget {
 class _ProductListScreenState extends State<ProductListScreen> {
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: SafeArea(
-        child: Scaffold(
-          appBar: AppBar(
-            title: Text("Товары. Категория: "),
-          ),
-          body: BlocBuilder<ProductCubit, ProductState>(
-            builder: (context, state) {
-              if (state is ProductLoading) {
-                return const Center(
-                  child: CircularProgressIndicator.adaptive(),
-                );
-              } else if (state is ProductSuccess) {
-                return Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 10),
-                    child: buildProductsList());
-              } else {
-                return Container();
-              }
-            },
-          ),
+    final category =
+        (ModalRoute.of(context)!.settings.arguments as Map)['category'];
+
+    return SafeArea(
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text(category),
+        ),
+        body: BlocBuilder<ProductCubit, ProductState>(
+          builder: (context, state) {
+            if (state is ProductLoading) {
+              return const Center(
+                child: CircularProgressIndicator.adaptive(),
+              );
+            } else if (state is ProductSuccess) {
+              return Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 10),
+                  child: buildProductsList(category));
+            } else {
+              return Container();
+            }
+          },
         ),
       ),
     );
   }
 
-  Widget buildProductsList() {
+  Widget buildProductsList(String category) {
     final productsList = context.read<ProductsRepository>().currentProductList;
 
     return ListView.separated(
         itemBuilder: (context, index) => ProductPreviewWidget(
               product: productsList[index],
+              category: category,
             ),
         separatorBuilder: (context, index) => const SizedBox(
               height: 10,
@@ -59,10 +61,12 @@ class _ProductListScreenState extends State<ProductListScreen> {
 
 class ProductPreviewWidget extends StatelessWidget {
   final ProductModel product;
+  final String category;
 
   const ProductPreviewWidget({
     super.key,
     required this.product,
+    required this.category,
   });
 
   @override
@@ -71,8 +75,11 @@ class ProductPreviewWidget extends StatelessWidget {
 
     return GestureDetector(
       onTap: () {
-        context.read<ProductDetailsCubit>().loadProductDetailsById(product.productId);
-        Navigator.of(context).pushNamed(RouteNames.productDetails);
+        context
+            .read<ProductDetailsCubit>()
+            .loadProductDetailsById(product.productId);
+        Navigator.of(context).pushNamed(RouteNames.productDetails,
+            arguments: {'category': category});
       },
       child: Container(
           clipBehavior: Clip.hardEdge,

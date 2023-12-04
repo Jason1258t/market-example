@@ -14,25 +14,26 @@ class ProductDetailsScreen extends StatefulWidget {
 class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: SafeArea(
-        child: Scaffold(
-          appBar: AppBar(title: Text("ТОВАР")),
-          body: SingleChildScrollView(
-            child: Container(
-              padding:const  EdgeInsets.symmetric(horizontal: 10),
-              child: BlocBuilder<ProductDetailsCubit, ProductDetailsState>(
-                builder: (context, state) {
-                  if (state is ProductDetailsLoading) {
-                    return Center(
-                      child: CircularProgressIndicator.adaptive(),
-                    );
-                  } else if (state is ProductDetailsSuccessl) {
-                    return buildProductInfoWidget();
-                  }
-                  return Container();
-                },
-              ),
+    final category =
+        (ModalRoute.of(context)!.settings.arguments as Map)['category'];
+
+    return SafeArea(
+      child: Scaffold(
+        appBar: AppBar(title: const Text("ТОВАР")),
+        body: SingleChildScrollView(
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 10),
+            child: BlocBuilder<ProductDetailsCubit, ProductDetailsState>(
+              builder: (context, state) {
+                if (state is ProductDetailsLoading) {
+                  return const Center(
+                    child: CircularProgressIndicator.adaptive(),
+                  );
+                } else if (state is ProductDetailsSuccessl) {
+                  return buildProductInfoWidget(category);
+                }
+                return Container();
+              },
             ),
           ),
         ),
@@ -40,7 +41,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
     );
   }
 
-  Widget buildProductInfoWidget() {
+  Widget buildProductInfoWidget(String category) {
     final product = context.read<ProductsRepository>().lastOpenedProduct;
     final size = MediaQuery.sizeOf(context);
 
@@ -64,8 +65,8 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
           product.title,
           style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
         ),
-        // Text("${product.title}",
-        //     style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w500)),
+        Text(category,
+            style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w500)),
         Text(product.productDescription,
             style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w500))
       ],

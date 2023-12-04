@@ -7,6 +7,8 @@ class CategoryRepository {
 
   CategoryRepository({required this.api});
 
+
+
   Future<List<CategoryModel>> loadCategoryList() async {
     final response = await api.category.getCategoryList();
 
