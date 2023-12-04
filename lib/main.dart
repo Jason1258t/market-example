@@ -3,5 +3,5 @@ import 'package:market/providers.dart';
 
 
 void main() {
-  runApp(const MyRepositoryProvider());
+  runApp( MyRepositoryProvider());
 }

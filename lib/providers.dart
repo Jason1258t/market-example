@@ -1,22 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:market/api/api_service.dart';
+import 'package:market/app.dart';
+import 'package:market/features/category/data/category_repository.dart';
 import 'package:market/features/category/logic/cubit/category_cubit.dart';
 import 'package:market/features/products/data/products_repository.dart';
 import 'package:market/features/products/logic/cubit/product_cubit.dart';
 
 
-final ApiService apiService = ApiService();
+
 
 class MyRepositoryProvider extends StatelessWidget {
-  const MyRepositoryProvider({super.key});
+  MyRepositoryProvider({super.key});
+  final ApiService apiService = ApiService();
 
   @override
   Widget build(BuildContext context) {
     return MultiRepositoryProvider(
       providers: [
         RepositoryProvider(
-          create: (context) => (api: apiService),
+          create: (context) => CategoryRepository(api: apiService),
           lazy: false,
         ),
         RepositoryProvider(
@@ -24,7 +27,7 @@ class MyRepositoryProvider extends StatelessWidget {
           lazy: false,
         ),
       ],
-      child: Container(),
+      child: MyBlocProvider(),
     );
   }
 }
@@ -36,14 +39,16 @@ class MyBlocProvider extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider(
-          create: (context) => CategoryCubit(),
+        BlocProvider<CategoryCubit>(
+          create: (context) => CategoryCubit(RepositoryProvider.of<CategoryRepository>(context)),
+          lazy: false,
         ),
         BlocProvider(
           create: (context) => ProductCubit(),
+          lazy: false,
         ),
       ],
-      child: Container(),
+      child: MyApp(),
     );
   }
 }

@@ -21,8 +21,8 @@ class CategoryModel {
       title: json['title'] as String,
       imageUrl: json['imageUrl'] as String,
       hasSubcategories: json['hasSubcategories'] as int,
-      fullName: json['fullName'] as String,
-      categoryDescription: json['categoryDescription'] as String,
+      fullName: json['fullName'] ?? "",
+      categoryDescription: json['categoryDescription'] ?? "",
     );
   }
 
