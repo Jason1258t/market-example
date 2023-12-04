@@ -76,8 +76,9 @@ class ProductPreviewWidget extends StatelessWidget {
       },
       child: Container(
           clipBehavior: Clip.hardEdge,
+          padding: const EdgeInsets.only(bottom: 10),
           width: size.width * 0.8,
-          height: size.width * 0.8,
+          // height: size.width * 0.8,
           decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(16), color: Colors.grey),
           child: Column(
