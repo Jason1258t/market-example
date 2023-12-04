@@ -44,7 +44,7 @@ class MyBlocProvider extends StatelessWidget {
           lazy: false,
         ),
         BlocProvider(
-          create: (context) => ProductCubit(),
+          create: (context) => ProductCubit(RepositoryProvider.of<ProductsRepository>(context)),
           lazy: false,
         ),
       ],

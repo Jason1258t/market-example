@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:market/features/category/data/category_repository.dart';
 import 'package:market/features/category/logic/cubit/category_cubit.dart';
+import 'package:market/features/products/logic/cubit/product_cubit.dart';
 import 'package:market/models/category.dart';
+import 'package:market/routes/route_names.dart';
 
 class CategoryScreen extends StatefulWidget {
   const CategoryScreen({super.key});
@@ -29,15 +31,15 @@ class _CategoryScreenState extends State<CategoryScreen> {
             body: BlocBuilder<CategoryCubit, CategoryState>(
               builder: (context, state) {
                 if (state is CategoryLoading) {
-                  return Center(
+                  return const Center(
                     child: CircularProgressIndicator.adaptive(),
                   );
                 } else if (state is CategorySuccess) {
                   return Container(
-                    padding: EdgeInsets.symmetric(horizontal: 10),
-                    child: buildCategoryWidget());
+                      padding: const EdgeInsets.symmetric(horizontal: 10),
+                      child: buildCategoryWidget());
                 } else {
-                  return Center(
+                  return const Center(
                     child: Text("Server error"),
                   );
                 }
@@ -52,7 +54,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
 
     return GridView.builder(
         itemCount: categoryData.length,
-        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: 2,
             childAspectRatio: 1,
             mainAxisSpacing: 10,
@@ -69,8 +71,11 @@ class CategoryItemWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      onTap: () {},
+    return GestureDetector(
+      onTap: () {
+        context.read<ProductCubit>().loadProductsList(category.categoryId);
+        Navigator.pushNamed(context, RouteNames.product);
+      },
       child: Container(
         clipBehavior: Clip.hardEdge,
         decoration: BoxDecoration(
@@ -80,6 +85,7 @@ class CategoryItemWidget extends StatelessWidget {
             Positioned.fill(
               child: Image.network(
                 category.imageUrl,
+                fit: BoxFit.fill,
                 errorBuilder: (context, error, stackTrace) {
                   return Image.asset(
                     'assets/nature.jpg',
@@ -98,9 +104,10 @@ class CategoryItemWidget extends StatelessWidget {
                       color: Colors.white,
                       border: Border.all(width: 1, color: Colors.black)),
                   child: Text(
-                    "${category.fullName}",
+                    category.fullName,
                     overflow: TextOverflow.ellipsis,
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
+                    style: const TextStyle(
+                        fontSize: 20, fontWeight: FontWeight.w600),
                   )),
             )
           ],
