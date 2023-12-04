@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:market/features/products/data/products_repository.dart';
 import 'package:market/features/products/logic/cubit/product_cubit.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:market/features/products/logic/product_details/product_details_cubit.dart';
 import 'package:market/models/product.dart';
 import 'package:market/routes/route_names.dart';
+import 'package:market/utils/constants.dart';
 
 class ProductListScreen extends StatefulWidget {
   const ProductListScreen({super.key});
@@ -62,8 +64,6 @@ class ProductPreviewWidget extends StatelessWidget {
     super.key,
     required this.product,
   });
-  final deboshirUrl =
-      "https://avatars.mds.yandex.net/get-kinopoisk-image/1629390/865d2d0e-bac6-4a78-a0ed-17a87b285069/220x330";
 
   @override
   Widget build(BuildContext context) {
@@ -71,6 +71,7 @@ class ProductPreviewWidget extends StatelessWidget {
 
     return GestureDetector(
       onTap: () {
+        context.read<ProductDetailsCubit>().loadProductDetailsById(product.productId);
         Navigator.of(context).pushNamed(RouteNames.productDetails);
       },
       child: Container(

@@ -6,9 +6,7 @@ import 'package:market/features/category/data/category_repository.dart';
 import 'package:market/features/category/logic/cubit/category_cubit.dart';
 import 'package:market/features/products/data/products_repository.dart';
 import 'package:market/features/products/logic/cubit/product_cubit.dart';
-
-
-
+import 'package:market/features/products/logic/product_details/product_details_cubit.dart';
 
 class MyRepositoryProvider extends StatelessWidget {
   MyRepositoryProvider({super.key});
@@ -40,11 +38,18 @@ class MyBlocProvider extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider<CategoryCubit>(
-          create: (context) => CategoryCubit(RepositoryProvider.of<CategoryRepository>(context)),
+          create: (context) =>
+              CategoryCubit(RepositoryProvider.of<CategoryRepository>(context)),
           lazy: false,
         ),
         BlocProvider(
-          create: (context) => ProductCubit(RepositoryProvider.of<ProductsRepository>(context)),
+          create: (context) =>
+              ProductCubit(RepositoryProvider.of<ProductsRepository>(context)),
+          lazy: false,
+        ),
+        BlocProvider(
+          create: (context) =>
+              ProductDetailsCubit(RepositoryProvider.of<ProductsRepository>(context)),
           lazy: false,
         ),
       ],
